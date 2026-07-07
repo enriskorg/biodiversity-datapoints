@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de datapoints de biodiversidad · 7 estándares</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7; --panel:#FFFFFF; --ink:#17211C; --ink-soft:#4A574F;
+  --line:#E4E1D8; --line-strong:#CFCabb;
+  --forest:#21453A; --moss:#3E7A5E; --amber:#B7791F; --amber-bg:#FBF3E2;
+  --c-esrs:#2E6E4E; --c-gri:#7A5CBF; --c-tnfd:#1E6F8C; --c-cdp:#C2622D;
+  --c-sbti:#A03D57; --c-s1:#5A6472; --c-s2:#8A8172;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+
+header.masthead{border-bottom:2px solid var(--ink);background:var(--paper)}
+.masthead .wrap{padding-top:34px;padding-bottom:0}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--moss);font-weight:500;margin:0 0 14px}
+h1{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em;
+  font-size:clamp(30px,5vw,50px);line-height:1.02;margin:0;max-width:19ch}
+h1 em{font-style:normal;color:var(--forest)}
+.sub{margin:16px 0 0;max-width:66ch;color:var(--ink-soft);font-size:15.5px}
+.sub b{color:var(--ink);font-weight:600}
+
+.coverage{margin:26px 0 4px}
+.coverage-label{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
+.cov-bar{display:flex;height:46px;border:1px solid var(--line-strong);
+  border-radius:3px;overflow:hidden;background:var(--panel)}
+.cov-seg{position:relative;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border-right:1px solid rgba(255,255,255,.55);
+  transition:filter .15s, opacity .15s;min-width:0}
+.cov-seg:last-child{border-right:0}
+.cov-seg:hover{filter:brightness(1.08)}
+.cov-seg.dim{opacity:.32}
+.cov-seg .seg-n{font-family:"Archivo",sans-serif;font-weight:800;color:#fff;
+  font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.cov-legend{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:12px}
+.cov-legend button{all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;
+  font-size:12.5px;color:var(--ink-soft);padding:2px 4px;border-radius:4px}
+.cov-legend button:hover{color:var(--ink)}
+.cov-legend button.off{opacity:.4}
+.swatch{width:11px;height:11px;border-radius:2px;flex:none}
+.cov-legend .lg-n{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-weight:500}
+
+.tabs{display:flex;gap:2px;margin-top:26px}
+.tab{all:unset;cursor:pointer;font-family:"Inter",sans-serif;font-weight:600;
+  font-size:14.5px;color:var(--ink-soft);padding:12px 20px;border-radius:8px 8px 0 0;
+  border:1px solid transparent;border-bottom:none;position:relative;top:1px}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--forest);background:var(--paper);
+  border-color:var(--ink);border-bottom:2px solid var(--paper)}
+.tab .t-n{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--moss);
+  margin-left:7px;font-weight:500}
+.tab.active .t-n{color:var(--forest)}
+
+.controls{position:sticky;top:0;z-index:20;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:14px 0}
+.controls .wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 260px;display:flex;align-items:center;gap:9px;
+  background:var(--panel);border:1px solid var(--line-strong);border-radius:7px;
+  padding:9px 13px;min-width:200px}
+.search:focus-within{border-color:var(--forest);box-shadow:0 0 0 3px rgba(33,69,58,.1)}
+.search svg{flex:none;opacity:.55}
+.search input{all:unset;flex:1;font-size:14.5px;color:var(--ink)}
+.selects{display:flex;gap:9px;flex-wrap:wrap}
+select{font-family:"Inter",sans-serif;font-size:13.5px;color:var(--ink);
+  background:var(--panel);border:1px solid var(--line-strong);border-radius:7px;
+  padding:9px 30px 9px 12px;cursor:pointer;-webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%234A574F' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat;background-position:right 11px center}
+select:focus{outline:none;border-color:var(--forest)}
+.btn{font-family:"Inter",sans-serif;font-size:13px;font-weight:500;cursor:pointer;
+  border:1px solid var(--line-strong);background:var(--panel);color:var(--ink);
+  border-radius:7px;padding:9px 14px;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:var(--forest);color:var(--forest)}
+.btn.reset{border-style:dashed}
+
+.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:16px 0 10px;flex-wrap:wrap}
+.count{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-soft)}
+.count b{color:var(--ink);font-weight:500}
+
+.tablecard{background:var(--panel);border:1px solid var(--line-strong);
+  border-radius:9px;overflow:hidden;margin-bottom:60px}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:920px}
+thead th{position:sticky;top:0;background:var(--forest);color:#F4F5F0;text-align:left;
+  font-family:"Inter",sans-serif;font-weight:600;font-size:12px;letter-spacing:.04em;
+  text-transform:uppercase;padding:13px 16px;white-space:nowrap;cursor:pointer;
+  user-select:none;border-right:1px solid rgba(255,255,255,.1)}
+thead th:last-child{border-right:0}
+thead th .arrow{opacity:.4;font-size:10px;margin-left:5px}
+thead th.sorted .arrow{opacity:1}
+tbody td{padding:14px 16px;border-top:1px solid var(--line);vertical-align:top;font-size:14px}
+tbody tr:hover{background:#FAF9F4}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:"Inter",sans-serif;
+  font-size:11.5px;font-weight:600;padding:3px 9px 3px 8px;border-radius:20px;
+  white-space:nowrap;color:#fff}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.85);flex:none}
+.code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;
+  color:var(--forest);white-space:nowrap}
+.req{color:var(--ink);max-width:46ch}
+.def{color:var(--ink-soft);font-size:12.8px;margin-top:6px;max-width:46ch;
+  padding-left:11px;border-left:2px solid var(--line-strong)}
+.type-tag{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink);
+  background:#EFEDE5;border:1px solid var(--line-strong);border-radius:5px;
+  padding:2px 7px;white-space:nowrap;display:inline-block}
+.oblig{font-size:12.3px;color:var(--ink-soft);white-space:nowrap}
+.miss{display:block;margin-top:9px;font-size:12.4px;color:#8a5a12;
+  background:var(--amber-bg);border:1px solid #EAD9B4;border-radius:6px;
+  padding:7px 10px 7px 28px;position:relative;max-width:44ch}
+.miss::before{content:"!";position:absolute;left:10px;top:7px;
+  font-family:"Archivo";font-weight:800;color:var(--amber)}
+.miss b{color:#7a4f10}
+.empty{padding:60px 20px;text-align:center;color:var(--ink-soft)}
+.empty h3{font-family:"Archivo";font-weight:800;color:var(--ink);margin:0 0 6px}
+
+.conv-intro{padding:26px 0 6px;max-width:74ch;color:var(--ink-soft)}
+.conv-intro h2{font-family:"Archivo";font-weight:800;color:var(--ink);
+  font-size:24px;margin:0 0 10px;letter-spacing:-.01em}
+.conv-intro b{color:var(--ink);font-weight:600}
+.legend-deg{display:flex;align-items:center;gap:9px;margin:14px 0 4px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap}
+.deg-scale{display:flex;height:10px;width:150px;border-radius:5px;overflow:hidden;
+  border:1px solid var(--line-strong)}
+
+.matrixcard{background:var(--panel);border:1px solid var(--line-strong);
+  border-radius:9px;overflow:hidden;margin:18px 0 60px}
+.mscroll{overflow-x:auto}
+table.matrix{border-collapse:collapse;width:100%;min-width:860px}
+table.matrix thead th{position:sticky;top:0;background:var(--forest);color:#F4F5F0;
+  font-family:"Inter";font-weight:600;font-size:11.5px;letter-spacing:.03em;
+  padding:12px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+table.matrix thead th.th-theme{text-align:left;padding-left:16px;min-width:250px}
+table.matrix thead th.th-deg{width:74px}
+.mrow{cursor:pointer;border-top:1px solid var(--line)}
+.mrow:hover{background:#FAF9F4}
+.mrow.open{background:#F5F3EC}
+.th-cell{padding:13px 16px;vertical-align:middle}
+.th-name{font-weight:600;color:var(--ink);font-size:14px;display:flex;align-items:center;gap:8px}
+.th-name .chev{font-size:11px;color:var(--moss);transition:transform .15s}
+.mrow.open .th-name .chev{transform:rotate(90deg)}
+.th-desc{color:var(--ink-soft);font-size:12px;margin-top:3px;max-width:44ch}
+.deg-cell{text-align:center;vertical-align:middle;padding:10px}
+.deg-badge{display:inline-block;font-family:"Archivo";font-weight:800;font-size:14px;
+  color:#fff;border-radius:20px;padding:3px 11px;min-width:42px}
+.cell{text-align:center;vertical-align:middle;padding:8px 6px;border-left:1px solid var(--line)}
+.cell .num{display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:7px;color:#fff;font-family:"IBM Plex Mono";
+  font-weight:500;font-size:13px}
+.cell .none{color:var(--line-strong);font-size:15px}
+
+.detailrow td{padding:0;border-top:none;background:#F5F3EC}
+.detail-inner{padding:6px 16px 20px}
+.dgroup{display:flex;gap:12px;padding:11px 0;border-top:1px dashed var(--line-strong);
+  align-items:baseline;flex-wrap:wrap}
+.dgroup:first-child{border-top:none}
+.dgroup .glabel{flex:0 0 118px;font-weight:600;font-size:12.5px;display:flex;
+  align-items:center;gap:7px}
+.dchips{display:flex;flex-wrap:wrap;gap:6px}
+.dchip{all:unset;cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:12px;
+  color:var(--ink);background:var(--panel);border:1px solid var(--line-strong);
+  border-radius:6px;padding:4px 9px;transition:border-color .12s,background .12s}
+.dchip:hover{border-color:var(--forest);background:#fff}
+.dchip .cdot{display:inline-block;width:7px;height:7px;border-radius:50%;
+  margin-right:6px;vertical-align:middle}
+
+footer{border-top:1px solid var(--line);padding:24px 0 50px;color:var(--ink-soft);font-size:12.5px}
+footer .wrap{display:flex;gap:8px;flex-direction:column}
+footer code{font-family:"IBM Plex Mono",monospace;color:var(--forest)}
+
+@media(max-width:640px){
+  .def,.req,.miss,.th-desc{max-width:none}
+  thead th{font-size:11px;padding:11px 12px}
+  tbody td{padding:12px 12px}
+  .tab{padding:11px 13px;font-size:13.5px}
+  .dgroup .glabel{flex-basis:100%}
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Reporting de sostenibilidad · Divulgación de biodiversidad</p>
+    <h1>Datapoints de <em>biodiversidad</em> en siete estándares</h1>
+    <p class="sub">Registro cruzado de todos los requisitos de divulgación relacionados con la biodiversidad —ya sea porque pertenecen a una categoría/módulo de biodiversidad o porque la pregunta guarda relación con ella— identificados en <b>ESRS E4, GRI 101, TNFD, CDP 2024, SBTi Net-Zero v2, IFRS S1 e IFRS S2</b>.</p>
+
+    <div class="coverage">
+      <div class="coverage-label"><span>Cobertura por estándar — ancho ∝ nº de datapoints</span><span id="covTotal"></span></div>
+      <div class="cov-bar" id="covBar"></div>
+      <div class="cov-legend" id="covLegend"></div>
+    </div>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="todos">Todos los datapoints<span class="t-n" id="tabTodosN"></span></button>
+      <button class="tab" data-tab="conv">Convergencia<span class="t-n" id="tabConvN"></span></button>
+    </nav>
+  </div>
+</header>
+
+<section id="view-todos">
+  <div class="controls">
+    <div class="wrap">
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#4A574F" stroke-width="1.6"/><path d="M11 11l3 3" stroke="#4A574F" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="Buscar por código, requisito, definición…" autocomplete="off">
+      </label>
+      <div class="selects">
+        <select id="fStd" aria-label="Filtrar por estándar"></select>
+        <select id="fType" aria-label="Filtrar por tipo de dato"></select>
+        <select id="fCat" aria-label="Filtrar por categoría"></select>
+      </div>
+      <button class="btn reset" id="reset">Restablecer</button>
+      <button class="btn" id="csv">↓ CSV</button>
+    </div>
+  </div>
+  <main class="wrap">
+    <div class="meta"><div class="count" id="count"></div></div>
+    <div class="tablecard">
+      <div class="tscroll">
+        <table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table>
+      </div>
+      <div class="empty" id="empty" style="display:none">
+        <h3>Sin resultados</h3>
+        <p>Ajusta la búsqueda o restablece los filtros para ver de nuevo los datapoints.</p>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="view-conv" hidden>
+  <main class="wrap">
+    <div class="conv-intro">
+      <h2>Convergencia entre estándares</h2>
+      <p>Los 87 datapoints se han agrupado en <b id="nThemes"></b> temas comunes de divulgación. Cada fila muestra en cuántos —y en cuáles— de los 7 estándares converge ese tema. El <b>grado de convergencia</b> (n/7) indica cuántos estándares abordan el mismo asunto. Haz clic en cualquier fila para ver los datapoints concretos que se relacionan entre sí; cada código enlaza a su ficha en «Todos los datapoints».</p>
+      <div class="legend-deg">
+        <span>Menor convergencia</span>
+        <span class="deg-scale" id="degScale"></span>
+        <span>Mayor</span>
+      </div>
+    </div>
+    <div class="matrixcard">
+      <div class="mscroll">
+        <table class="matrix"><thead><tr id="mhead"></tr></thead><tbody id="mbody"></tbody></table>
+      </div>
+    </div>
+  </main>
+</section>
+
+<footer><div class="wrap">
+  <span>Registro elaborado a partir de los siete documentos del proyecto. Los textos de los requisitos están <b>parafraseados y condensados</b> (no reproducen literalmente los estándares, protegidos por derechos de autor).</span>
+  <span>Categorías: <code>topic/module</code> = norma o módulo de biodiversidad · <code>issue</code> = biodiversidad como una de varias cuestiones ambientales · <code>nature</code> = relativo a la naturaleza · <code>adjacent</code> = adyacente vía FLAG/uso de la tierra/salvaguardas · <code>reference</code> = solo mención o vía de orientación.</span>
+  <span>La agrupación en temas de convergencia es una <b>interpretación analítica</b> (crosswalk) del autor, no una equivalencia oficial entre estándares.</span>
+</div></footer>
+
+<script>
+// Registro de datapoints relacionados con biodiversidad — 7 estándares
+// Requisitos parafraseados (no reproducción literal) por respeto a derechos de autor.
+const DATA = [
+/* ===================== ESRS E4 (Draft, nov. 2025) ===================== */
+{std:"ESRS E4",sec:"Estrategia",code:"E4-1 (§10)",cat:"topic",type:"Narrativo",oblig:"shall (si aplica)",
+ req:"Divulgar las características clave del plan de transición en biodiversidad y ecosistemas, si la empresa lo tiene y lo ha hecho público.",
+ def:"«Hecho público» (AR 2): las características clave están disponibles en canales públicos (web, informes) antes o en el momento de publicar el estado de sostenibilidad.",missing:""},
+{std:"ESRS E4",sec:"Gestión de IRO",code:"E4-2 (§11)",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Divulgar las políticas de biodiversidad y ecosistemas conforme a ESRS 2 GDR-P.",def:"",missing:""},
+{std:"ESRS E4",sec:"Gestión de IRO",code:"E4-2 (§12a)",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir el contenido de las políticas respecto a la trazabilidad de productos, componentes y materias primas con impactos materiales sobre biodiversidad en la cadena de valor.",def:"",missing:""},
+{std:"ESRS E4",sec:"Gestión de IRO",code:"E4-2 (§12b)",cat:"topic",type:"Narrativo / localización",oblig:"shall",
+ req:"Describir el contenido de las políticas respecto a emplazamientos propios ubicados en o cerca de un área sensible desde el punto de vista de la biodiversidad.",
+ def:"Área de influencia (AR 5): un emplazamiento fuera del área sensible se considera «cercano» según distancias de amortiguación por tipo de actividad.",missing:""},
+{std:"ESRS E4",sec:"Gestión de IRO",code:"E4-3 (§13)",cat:"topic",type:"Narrativo + monetario",oblig:"shall",
+ req:"Divulgar las acciones clave en biodiversidad y ecosistemas y los recursos asignados a su implementación, conforme a ESRS 2 GDR-A.",def:"",missing:""},
+{std:"ESRS E4",sec:"Gestión de IRO",code:"E4-3 (§14)",cat:"topic",type:"Mixto (monetario+cuantitativo+narrativo)",oblig:"shall",
+ req:"Describir las compensaciones (offsets) de biodiversidad usadas: finalidad, efectos financieros en términos monetarios, área, tipo, criterios de calidad y estándares que cumplen.",def:"",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-4 (§15)",cat:"topic",type:"Cuantitativo + narrativo",oblig:"shall",
+ req:"Divulgar los objetivos de biodiversidad y ecosistemas conforme a ESRS 2 GDR-T.",
+ def:"Los objetivos (AR 7) abordan «presiones» sobre la naturaleza y el «estado de la naturaleza»; idealmente científicos y alineados con el GBF; siguen la jerarquía de mitigación.",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-4 (§16)",cat:"topic",type:"Narrativo",oblig:"shall (condicional)",
+ req:"Si se usan offsets de biodiversidad para fijar objetivos, divulgar cómo se han utilizado.",def:"",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-5 (§18a)",cat:"topic",type:"Localización / narrativo",oblig:"shall",
+ req:"Divulgar las localizaciones en operaciones propias a las que se refieren los impactos, riesgos u oportunidades materiales.",def:"",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-5 (§18b)",cat:"topic",type:"Lista / semicuantitativo",oblig:"shall",
+ req:"Para esas localizaciones, listar las áreas sensibles de biodiversidad (nombre y tipo) vinculadas a impactos negativos materiales, si las hubiera.",def:"",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-5 (§18c)",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Divulgar las actividades de la empresa relacionadas con impactos negativos materiales sobre las áreas sensibles identificadas.",def:"",missing:""},
+{std:"ESRS E4",sec:"Métricas y objetivos",code:"E4-5 (§19)",cat:"topic",type:"Cuantitativo",oblig:"shall",
+ req:"Reportar métricas sobre los impactos materiales en biodiversidad y ecosistemas (conforme a ESRS 2 GDR-M).",
+ def:"Según submateria (AR 10): (a) drivers del cambio; (b) estado de las especies (p.ej. riesgo de extinción); (c) condición y extensión de ecosistemas; (d) servicios ecosistémicos.",
+ missing:"Versión draft de simplificación (nov. 2025): las métricas cuantitativas concretas no se enumeran en el propio DR; remiten a GDR-M y a las AR."},
+
+/* ===================== GRI 101 Biodiversity 2024 ===================== */
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-1-a",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir políticas o compromisos para detener y revertir la pérdida de biodiversidad y cómo se informan por las Metas 2050 y Objetivos 2030 del Marco Global de Biodiversidad de Kunming-Montreal.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-1-b",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Reportar el alcance de esas políticas/compromisos sobre las actividades propias y sobre las relaciones comerciales.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-1-c",cat:"topic",type:"Mixto (narrativo+cuantitativo)",oblig:"shall",
+ req:"Reportar metas y objetivos para detener/revertir la pérdida, si se basan en consenso científico, el año base y los indicadores para evaluar el progreso.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-a",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Reportar cómo aplica la jerarquía de mitigación: (i) evitar, (ii) minimizar, (iii) restaurar/rehabilitar, (iv) compensar impactos residuales, (v) acciones transformativas y de conservación adicionales.",
+ def:"Jerarquía de mitigación: evitación, minimización, restauración/rehabilitación y compensación (SBTN añade acciones transformativas).",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-b",cat:"topic",type:"Cuantitativo (ha)",oblig:"shall",
+ req:"Por cada sitio con impactos más significativos: (i) hectáreas en restauración/rehabilitación; (ii) hectáreas ya restauradas/rehabilitadas.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-c",cat:"topic",type:"Mixto (narrativo+localización)",oblig:"shall",
+ req:"Por cada compensación (offset): (i) objetivos; (ii) localización geográfica; (iii) si cumple principios de buenas prácticas; (iv) si está certificada/verificada por terceros.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-d",cat:"topic",type:"Narrativo (lista)",oblig:"shall",
+ req:"Listar qué sitios con impactos más significativos tienen un plan de gestión de biodiversidad y explicar por qué los demás no lo tienen.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-e",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir cómo potencia sinergias y reduce contrapartidas (trade-offs) entre las acciones de gestión de biodiversidad y de cambio climático.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-2-f",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir cómo asegura que las acciones sobre biodiversidad evitan/minimizan impactos negativos y maximizan los positivos para las partes interesadas.",def:"",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-3-a",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir el proceso para asegurar el cumplimiento de las regulaciones y medidas de acceso y reparto de beneficios (ABS).",
+ def:"ABS: acceso a recursos genéticos y conocimiento tradicional asociado, y reparto justo y equitativo de beneficios (Protocolo de Nagoya).",missing:""},
+{std:"GRI 101",sec:"1. Gestión del tema",code:"101-3-b",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Describir las acciones voluntarias adoptadas para avanzar en ABS, adicionales a las obligaciones legales o cuando no existen regulaciones.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-4-a",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Explicar cómo ha determinado qué sitios y qué productos/servicios de su cadena de suministro tienen los impactos reales y potenciales más significativos sobre la biodiversidad.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-5-a",cat:"topic",type:"Mixto (localización + ha)",oblig:"shall",
+ req:"Reportar la localización y el tamaño en hectáreas de los sitios con los impactos más significativos.",def:"Recomienda usar polígonos/mapas y, si están disponibles, nombres y coordenadas.",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-5-b",cat:"topic",type:"Categórico + cuantitativo",oblig:"shall",
+ req:"Por cada sitio: si está en o cerca de un área ecológicamente sensible, la distancia y su tipo: (i) importancia para biodiversidad; (ii) alta integridad ecosistémica; (iii) declive rápido de integridad; (iv) alto riesgo hídrico físico; (v) importante para servicios ecosistémicos a Pueblos Indígenas/comunidades.",
+ def:"Áreas ecológicamente sensibles según definición de la TNFD (Tabla 1 del Apéndice).",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-5-c",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Reportar las actividades que tienen lugar en cada sitio reportado.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-5-d",cat:"topic",type:"Narrativo / geográfico",oblig:"shall",
+ req:"Reportar los productos/servicios de la cadena de suministro con impactos más significativos y los países/jurisdicciones donde ocurren las actividades asociadas.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-a",cat:"topic",type:"Cuantitativo (ha)",oblig:"shall",
+ req:"Cambio de uso de tierra/mar: (i) ha de ecosistema natural convertido desde una fecha de corte, la fecha y el tipo de ecosistema antes/después; (ii) ha convertidas entre ecosistemas ya modificados en el periodo, y tipo antes/después.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-b",cat:"topic",type:"Cuantitativo",oblig:"shall",
+ req:"Explotación de recursos naturales: (i) por especie silvestre extraída, cantidad, tipo y riesgo de extinción; (ii) captación y consumo de agua en megalitros.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-c",cat:"topic",type:"Cuantitativo",oblig:"shall",
+ req:"Contaminación: cantidad y tipo de cada contaminante generado en cada sitio.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-d",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Especies exóticas invasoras: describir cómo se introducen o podrían introducirse en cada sitio.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-e",cat:"topic",type:"Cuantitativo",oblig:"shall",
+ req:"Para productos/servicios de la cadena de suministro, reportar la información de 101-6-a a d, desglosada por país/jurisdicción.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-6-f",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Reportar información contextual para entender cómo se han compilado los datos: estándares, metodologías y supuestos.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-7-a",cat:"topic",type:"Mixto (cuantitativo)",oblig:"shall",
+ req:"Por cada sitio, sobre los ecosistemas afectados o potencialmente afectados: (i) tipo de ecosistema en el año base; (ii) tamaño en ha en el año base; (iii) condición del ecosistema en el año base y en el periodo actual.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-7-b",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Reportar información contextual (estándares, metodologías y supuestos) sobre cómo se han compilado los datos.",def:"",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-8-a",cat:"topic",type:"Narrativo (lista)",oblig:"shall",
+ req:"Por cada sitio, listar los servicios ecosistémicos y beneficiarios afectados o potencialmente afectados por las actividades.",
+ def:"Servicios ecosistémicos: de aprovisionamiento; de regulación y mantenimiento; culturales.",missing:""},
+{std:"GRI 101",sec:"2. Divulgaciones del tema",code:"101-8-b",cat:"topic",type:"Narrativo",oblig:"shall",
+ req:"Explicar cómo los servicios ecosistémicos y beneficiarios se ven o podrían verse afectados por las actividades.",def:"",missing:""},
+
+/* ===================== TNFD (sept. 2023) ===================== */
+{std:"TNFD",sec:"Governance",code:"Governance A",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir la supervisión del consejo sobre dependencias, impactos, riesgos y oportunidades relacionados con la naturaleza.",def:"",missing:""},
+{std:"TNFD",sec:"Governance",code:"Governance B",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir el papel de la dirección en la evaluación y gestión de las dependencias, impactos, riesgos y oportunidades de naturaleza.",def:"",missing:""},
+{std:"TNFD",sec:"Governance",code:"Governance C",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir las políticas de derechos humanos y actividades de involucramiento respecto a Pueblos Indígenas, comunidades locales y otras partes afectadas, y su supervisión.",def:"",missing:""},
+{std:"TNFD",sec:"Strategy",code:"Strategy A",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir las dependencias, impactos, riesgos y oportunidades de naturaleza identificados a corto, medio y largo plazo.",def:"",missing:""},
+{std:"TNFD",sec:"Strategy",code:"Strategy B",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir el efecto sobre el modelo de negocio, la cadena de valor, la estrategia y la planificación financiera, incluidos los planes de transición.",def:"",missing:""},
+{std:"TNFD",sec:"Strategy",code:"Strategy C",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir la resiliencia de la estrategia a los riesgos y oportunidades de naturaleza, considerando distintos escenarios.",def:"",missing:""},
+{std:"TNFD",sec:"Strategy",code:"Strategy D",cat:"nature",type:"Localización",oblig:"recomendado",
+ req:"Divulgar las localizaciones de activos y/o actividades en operaciones propias y, cuando sea posible, en la cadena de valor, que cumplan los criterios de localizaciones prioritarias.",def:"",missing:""},
+{std:"TNFD",sec:"Risk & Impact Mgmt",code:"Risk & Impact A(i)",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir los procesos para identificar, evaluar y priorizar dependencias, impactos, riesgos y oportunidades en operaciones directas.",def:"",missing:""},
+{std:"TNFD",sec:"Risk & Impact Mgmt",code:"Risk & Impact A(ii)",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir esos procesos aplicados a la cadena de valor aguas arriba y aguas abajo.",def:"",missing:""},
+{std:"TNFD",sec:"Risk & Impact Mgmt",code:"Risk & Impact B",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir los procesos para gestionar las dependencias, impactos, riesgos y oportunidades de naturaleza.",def:"",missing:""},
+{std:"TNFD",sec:"Risk & Impact Mgmt",code:"Risk & Impact C",cat:"nature",type:"Narrativo",oblig:"recomendado",
+ req:"Describir cómo se integran esos procesos en la gestión de riesgos global de la organización.",def:"",missing:""},
+{std:"TNFD",sec:"Metrics & Targets",code:"Metrics & Targets A",cat:"nature",type:"Cuantitativo",oblig:"recomendado",
+ req:"Divulgar las métricas usadas para evaluar y gestionar riesgos y oportunidades materiales de naturaleza (ver métricas core C7.x).",def:"",missing:""},
+{std:"TNFD",sec:"Metrics & Targets",code:"Metrics & Targets B",cat:"nature",type:"Cuantitativo",oblig:"recomendado",
+ req:"Divulgar las métricas usadas para evaluar y gestionar dependencias e impactos sobre la naturaleza (ver métricas core C1.x–C5.x).",def:"",missing:""},
+{std:"TNFD",sec:"Metrics & Targets",code:"Metrics & Targets C",cat:"nature",type:"Mixto (cuantitativo+narrativo)",oblig:"recomendado",
+ req:"Describir los objetivos y metas usados para gestionar dependencias, impactos, riesgos y oportunidades, y el desempeño frente a ellos.",def:"",missing:""},
+// Core global metrics — dependencias e impactos
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C1.0",cat:"nature",type:"Cuantitativo (km²)",oblig:"comply or explain",
+ req:"Huella espacial total (km²): superficie controlada/gestionada + área alterada + área rehabilitada/restaurada.",def:"Driver: cambio de uso de tierra/agua dulce/océano.",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C1.1",cat:"nature",type:"Cuantitativo (km²)",oblig:"comply or explain",
+ req:"Extensión de cambio de uso del ecosistema (km²) por tipo de ecosistema y actividad; extensión conservada/restaurada (voluntaria vs. obligatoria); extensión gestionada de forma sostenible.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C2.0",cat:"nature",type:"Cuantitativo (toneladas)",oblig:"comply or explain",
+ req:"Contaminantes liberados al suelo (toneladas) por tipo.",def:"Driver: contaminación / eliminación de contaminación.",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C2.1",cat:"nature",type:"Cuantitativo (m³)",oblig:"comply or explain",
+ req:"Aguas residuales vertidas (m³): total, dulce y otras; concentraciones de contaminantes clave y temperatura del agua vertida.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C2.2",cat:"nature",type:"Cuantitativo (toneladas)",oblig:"comply or explain",
+ req:"Residuos peligrosos y no peligrosos generados por tipo, eliminados (incineración, vertedero, otros) y desviados de vertedero (reutilizados, reciclados, otros).",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C2.3",cat:"nature",type:"Cuantitativo (toneladas/%)",oblig:"comply or explain",
+ req:"Huella de plásticos: peso total de plásticos usados/vendidos por contenido de materia prima; % de envases reutilizables, compostables y reciclables.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C2.4",cat:"nature",type:"Cuantitativo (toneladas)",oblig:"comply or explain",
+ req:"Contaminantes atmosféricos no-GEI por tipo: material particulado, óxidos de nitrógeno, COV, óxidos de azufre y amoníaco.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C3.0",cat:"nature",type:"Cuantitativo (m³)",oblig:"comply or explain",
+ req:"Captación y consumo de agua (m³) procedentes de zonas de escasez hídrica, con identificación de la fuente.",def:"Driver: uso/reposición de recursos.",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C3.1",cat:"nature",type:"Cuantitativo (toneladas)",oblig:"comply or explain",
+ req:"Cantidad de materias primas de alto riesgo procedentes de tierra/océano/agua dulce por tipo; proporción bajo plan de gestión sostenible o certificación.",def:"Referencia a la High Impact Commodity List de SBTN.",missing:""},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C4.0",cat:"nature",type:"Cuantitativo (%) / cualitativo",oblig:"placeholder",
+ req:"Indicador placeholder: proporción de actividades de alto riesgo operadas con medidas para prevenir la introducción no intencionada de especies exóticas invasoras.",def:"",missing:"Indicador «placeholder»: la TNFD reconoce que aún no hay métrica ampliamente aceptada."},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C5.0",cat:"nature",type:"Cuantitativo / cualitativo",oblig:"placeholder",
+ req:"Indicador placeholder: condición del ecosistema por tipo de ecosistema y actividad.",def:"Driver: estado de la naturaleza.",missing:"Indicador «placeholder»: sin métrica única especificada."},
+{std:"TNFD",sec:"Métricas core — Impactos",code:"C5.1",cat:"nature",type:"Cuantitativo",oblig:"placeholder",
+ req:"Indicador placeholder: riesgo de extinción de especies.",def:"",missing:"Indicador «placeholder»: sin métrica única especificada."},
+// Core global metrics — riesgos y oportunidades
+{std:"TNFD",sec:"Métricas core — Riesgos/Oport.",code:"C7.0",cat:"nature",type:"Cuantitativo (monetario)",oblig:"comply or explain",
+ req:"Valor de activos, pasivos, ingresos y gastos evaluados como vulnerables a riesgos de transición relacionados con la naturaleza (total y proporción).",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Riesgos/Oport.",code:"C7.1",cat:"nature",type:"Cuantitativo (monetario)",oblig:"comply or explain",
+ req:"Valor de activos, pasivos, ingresos y gastos vulnerables a riesgos físicos relacionados con la naturaleza (total y proporción).",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Riesgos/Oport.",code:"C7.2",cat:"nature",type:"Monetario + narrativo",oblig:"comply or explain",
+ req:"Descripción y valor de multas/sanciones significativas o litigios del ejercicio por impactos negativos sobre la naturaleza.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Riesgos/Oport.",code:"C7.3",cat:"nature",type:"Cuantitativo (monetario)",oblig:"comply or explain",
+ req:"Importe de capex, financiación o inversión desplegado hacia oportunidades relacionadas con la naturaleza, por tipo, con referencia a taxonomías verdes.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas core — Riesgos/Oport.",code:"C7.4",cat:"nature",type:"Monetario + narrativo",oblig:"comply or explain",
+ req:"Incremento y proporción de ingresos por productos/servicios con impactos positivos demostrables sobre la naturaleza, con descripción de los impactos.",def:"",missing:""},
+{std:"TNFD",sec:"Métricas adicionales (Annex 2)",code:"A1.0–A12.x",cat:"nature",type:"Cuantitativo / mixto",oblig:"adicional (voluntario)",
+ req:"Conjunto de métricas globales adicionales sobre drivers de cambio, estado de la naturaleza y servicios ecosistémicos, a divulgar cuando sean relevantes.",def:"",
+ missing:"El Annex 2 contiene un catálogo extenso (>50 métricas) no enumerado íntegramente aquí; se recoge como grupo. Consultar Annex 2 del documento TNFD."},
+
+/* ===================== CDP 2024 Corporate Questionnaire ===================== */
+{std:"CDP 2024",sec:"C11 Biodiversidad",code:"11.1",cat:"module",type:"—",oblig:"—",
+ req:"Compromisos de biodiversidad (pregunta introductoria del módulo).",def:"",
+ missing:"No aparece en esta respuesta cumplimentada (el índice del documento arranca en 11.2); en el cuestionario en blanco puede existir 11.1. No verificable con este archivo."},
+{std:"CDP 2024",sec:"C11 Biodiversidad",code:"11.2 / 11.2.1 / 11.2.2",cat:"module",type:"Categórico + narrativo",oblig:"módulo biodiversidad",
+ req:"¿Qué acciones ha tomado la organización en el año para avanzar sus compromisos de biodiversidad? Tipo de acción (p.ej. protección/gestión de tierra o agua).",def:"",missing:""},
+{std:"CDP 2024",sec:"C11 Biodiversidad",code:"11.3",cat:"module",type:"Categórico + narrativo",oblig:"módulo biodiversidad",
+ req:"¿Usa la organización indicadores de biodiversidad para monitorizar su desempeño? Indicadores utilizados.",def:"",missing:""},
+{std:"CDP 2024",sec:"C11 Biodiversidad",code:"11.4",cat:"module",type:"Categórico (sí/no por tipo de área)",oblig:"módulo biodiversidad",
+ req:"¿Tiene la organización actividades ubicadas en o cerca de áreas importantes para la biodiversidad? (áreas legalmente protegidas, Patrimonio Mundial UNESCO, Reservas de Biosfera, sitios Ramsar, Áreas Clave de Biodiversidad, otras).",def:"",missing:""},
+{std:"CDP 2024",sec:"C11 Biodiversidad",code:"11.4.1 (.2–.11)",cat:"module",type:"Mixto (categórico + ha + narrativo)",oblig:"módulo biodiversidad",
+ req:"Detalle de actividades en/cerca de áreas importantes para la biodiversidad: tipo de área, categoría IUCN, país, nombre del área, proximidad, área de solapamiento (hectáreas), posible efecto negativo y medidas de mitigación implementadas.",def:"",missing:""},
+{std:"CDP 2024",sec:"C2 Dependencias e impactos",code:"2.2",cat:"issue",type:"Categórico + narrativo",oblig:"transversal (biodiversidad como opción)",
+ req:"¿Tiene la organización un proceso para identificar, evaluar y gestionar dependencias y/o impactos ambientales? La biodiversidad es una de las cuestiones ambientales seleccionables.",def:"",missing:""},
+{std:"CDP 2024",sec:"C4 Gobernanza",code:"4.1.1",cat:"issue",type:"Categórico",oblig:"transversal (fila «Biodiversity»)",
+ req:"¿Existe supervisión a nivel de consejo de las cuestiones ambientales? Se responde específicamente para la biodiversidad.",def:"",missing:""},
+{std:"CDP 2024",sec:"C4 Gobernanza",code:"4.1.2",cat:"issue",type:"Categórico + narrativo",oblig:"transversal (bloque «Biodiversity»)",
+ req:"Posiciones/comités del consejo con responsabilidad sobre las cuestiones ambientales y detalle de su supervisión; se cumplimenta para biodiversidad.",def:"",missing:""},
+{std:"CDP 2024",sec:"C4 Gobernanza",code:"4.3",cat:"issue",type:"Categórico",oblig:"transversal (fila «Biodiversity»)",
+ req:"¿Existe responsabilidad a nivel de dirección para las cuestiones ambientales? Se responde específicamente para la biodiversidad.",def:"",missing:""},
+{std:"CDP 2024",sec:"C4 Gobernanza",code:"4.3.1",cat:"issue",type:"Categórico + narrativo",oblig:"transversal (bloque «Biodiversity»)",
+ req:"Cargos/comités de alta dirección con responsabilidad ambiental y sus responsabilidades; se cumplimenta para biodiversidad.",def:"",missing:""},
+{std:"CDP 2024",sec:"C4 Políticas",code:"4.6.1.1",cat:"issue",type:"Categórico",oblig:"transversal (casilla «Biodiversity»)",
+ req:"Cuestiones ambientales cubiertas por las políticas ambientales de la organización; la biodiversidad es una casilla seleccionable.",def:"",missing:""},
+
+/* ===================== SBTi Corporate Net-Zero Standard v2 (jun. 2026) ===================== */
+{std:"SBTi Net-Zero v2",sec:"Contabilidad GEI",code:"C5.5",cat:"adjacent",type:"Cuantitativo (tCO₂e)",oblig:"shall (según categoría A/B)",
+ req:"Contabilizar y reportar emisiones de bosques, tierra y agricultura (FLAG), emisiones de bioenergía y remociones biogénicas/tecnológicas, conforme al GHG Protocol Land Sector and Removals Standard.",
+ def:"FLAG: Forest, Land and Agriculture — vincula el clima con el uso de la tierra y, por extensión, la biodiversidad.",missing:""},
+{std:"SBTi Net-Zero v2",sec:"Objetivos",code:"C9.8",cat:"adjacent",type:"Estructural / cuantitativo",oblig:"shall (condicional)",
+ req:"Cuando se fijen objetivos FLAG, deben establecerse y reportarse por separado de los objetivos no-FLAG y no agregarse en un único objetivo.",def:"",missing:""},
+{std:"SBTi Net-Zero v2",sec:"Criterios de sostenibilidad",code:"C35 (C35.1–C35.5)",cat:"adjacent",type:"Mixto (cuantitativo+narrativo)",oblig:"shall (según categoría)",
+ req:"Las materias primas de base biológica deben cumplir criterios de sostenibilidad de terceros y los mínimos de SBTi. Incluye C35.3: la producción no debe asociarse con deforestación ni conversión de ecosistemas naturales.",def:"",missing:""},
+{std:"SBTi Net-Zero v2",sec:"Salvaguardas (OER)",code:"C42.1(b)",cat:"adjacent",type:"Narrativo / cualitativo",oblig:"shall (programa OER)",
+ req:"Salvaguarda «no causar daño»: las actividades apoyadas deben diseñarse con salvaguardas para prevenir impactos sociales o ambientales negativos, incluido el respeto a la biodiversidad y a los derechos de Pueblos Indígenas y comunidades locales.",def:"",missing:""},
+
+/* ===================== ISSB IFRS S1 (2026) ===================== */
+{std:"IFRS S1",sec:"Fuentes de orientación",code:"§55–58",cat:"reference",type:"Narrativo (vía de orientación)",oblig:"shall / may (juicio)",
+ req:"En ausencia de una norma IFRS específica para un riesgo/oportunidad de sostenibilidad, la entidad aplica juicio y puede remitirse a la CDSB Framework Application Guidance for Biodiversity-related Disclosures y a las métricas de los SASB Standards.",
+ def:"S1 usa como ejemplo la dependencia de un recurso natural (agua) para ilustrar dependencias e impactos.",
+ missing:"IFRS S1 no contiene ninguna divulgación específica ni datapoint cuantitativo de biodiversidad; solo establece la vía de orientación aplicable a falta de norma específica."},
+
+/* ===================== ISSB IFRS S2 (2026) ===================== */
+{std:"IFRS S2",sec:"Apéndice A (términos)",code:"Def. «riesgo físico»",cat:"reference",type:"— (mención en definición)",oblig:"—",
+ req:"La «pérdida de biodiversidad» se menciona únicamente dentro de la definición de riesgos físicos relacionados con el clima (efecto a largo plazo del cambio climático). El «uso de la tierra» y la «disponibilidad de recursos naturales» figuran como variables del análisis de escenarios (§13).",def:"",
+ missing:"IFRS S2 (clima) no contiene ningún datapoint específico de biodiversidad; solo referencias contextuales dentro de definiciones y supuestos de escenarios."}
+];
+/* ================= CONFIG ================= */
+const STD_ORDER = ["ESRS E4","GRI 101","TNFD","CDP 2024","SBTi Net-Zero v2","IFRS S1","IFRS S2"];
+const STD_SHORT = {"ESRS E4":"ESRS E4","GRI 101":"GRI 101","TNFD":"TNFD","CDP 2024":"CDP","SBTi Net-Zero v2":"SBTi","IFRS S1":"IFRS S1","IFRS S2":"IFRS S2"};
+const STD_COLOR = {"ESRS E4":"var(--c-esrs)","GRI 101":"var(--c-gri)","TNFD":"var(--c-tnfd)","CDP 2024":"var(--c-cdp)","SBTi Net-Zero v2":"var(--c-sbti)","IFRS S1":"var(--c-s1)","IFRS S2":"var(--c-s2)"};
+const CAT_LABEL = {topic:"Norma de biodiversidad",module:"Módulo de biodiversidad",issue:"Biodiversidad como cuestión",nature:"Relativo a la naturaleza",adjacent:"Adyacente (FLAG/salvaguarda)",reference:"Solo referencia"};
+
+/* ================= THEMES (crosswalk) ================= */
+const THEMES = [
+  {id:"t1", name:"Gobernanza y supervisión", desc:"Supervisión del consejo y responsabilidad de la dirección sobre las cuestiones de biodiversidad/naturaleza."},
+  {id:"t2", name:"Políticas y compromisos", desc:"Políticas y compromisos para gestionar y revertir la pérdida de biodiversidad."},
+  {id:"t3", name:"Estrategia, modelo de negocio y transición", desc:"Efecto en la estrategia y el modelo de negocio; plan de transición; resiliencia."},
+  {id:"t4", name:"Identificación y evaluación de impactos y riesgos (IRO)", desc:"Procesos de identificación, evaluación y priorización de dependencias, impactos y riesgos (materialidad)."},
+  {id:"t5", name:"Localización y áreas sensibles", desc:"Localización de sitios/actividades y su relación con áreas sensibles o prioritarias para la biodiversidad."},
+  {id:"t6", name:"Driver: uso de tierra/mar y deforestación", desc:"Cambio de uso de tierra, agua dulce y mar; conversión de ecosistemas y deforestación (driver IPBES)."},
+  {id:"t7", name:"Driver: contaminación", desc:"Contaminación al suelo, agua y aire; residuos y plásticos (driver IPBES)."},
+  {id:"t8", name:"Driver: recursos naturales y agua", desc:"Explotación de recursos, captación/consumo de agua y materias primas de alto riesgo (driver IPBES)."},
+  {id:"t9", name:"Driver: especies exóticas invasoras", desc:"Introducción y gestión de especies exóticas invasoras (driver IPBES)."},
+  {id:"t10", name:"Estado de la naturaleza: especies y ecosistemas", desc:"Condición y extensión de ecosistemas y riesgo de extinción de especies."},
+  {id:"t11", name:"Servicios ecosistémicos", desc:"Servicios ecosistémicos y beneficiarios afectados o dependientes."},
+  {id:"t12", name:"Acciones y jerarquía de mitigación", desc:"Acciones y recursos; jerarquía de mitigación (evitar, minimizar, restaurar); planes de gestión."},
+  {id:"t13", name:"Compensaciones (offsets)", desc:"Uso, diseño, calidad y verificación de compensaciones de biodiversidad."},
+  {id:"t14", name:"Objetivos y metas", desc:"Fijación de objetivos y metas y seguimiento del desempeño frente a ellos."},
+  {id:"t15", name:"Métricas de desempeño", desc:"Métricas cuantitativas para medir impactos, dependencias y desempeño en biodiversidad."},
+  {id:"t16", name:"Efectos y riesgos financieros", desc:"Efectos financieros, activos/ingresos vulnerables, multas y oportunidades relacionadas con la naturaleza."},
+  {id:"t17", name:"Pueblos indígenas, comunidades y ABS", desc:"Derechos humanos, consentimiento, partes interesadas y acceso y reparto de beneficios (ABS)."},
+  {id:"t18", name:"Marco de referencia GBF (Kunming-Montreal)", desc:"Anclaje explícito de políticas y objetivos al Marco Global de Biodiversidad de Kunming-Montreal."}
+];
+
+/* Asignación de temas por índice de DATA (orden fijo, 87 elementos) */
+const THEME_BY_INDEX = [
+  ["t3","t18"],["t2"],["t2"],["t2","t5"],["t12"],["t13"],["t14","t18"],["t13","t14"],
+  ["t5"],["t5"],["t5","t4"],["t15","t10","t11","t6"],
+  ["t2","t18"],["t2"],["t14","t18"],["t12","t13"],["t12","t15"],["t13"],["t12"],["t12"],
+  ["t12","t17"],["t17"],["t17"],["t4"],["t5","t15"],["t5"],["t5"],["t5","t4"],
+  ["t6","t15"],["t8","t15"],["t7","t15"],["t9"],["t15","t4"],["t15"],["t10","t15"],["t15"],["t11"],["t11"],
+  ["t1"],["t1"],["t1","t17"],["t4","t3"],["t3","t16"],["t3"],["t5"],
+  ["t4"],["t4"],["t4","t12"],["t4","t16"],["t15","t16"],["t15"],["t14"],
+  ["t6","t15"],["t6","t15"],["t7","t15"],["t7","t15"],["t7","t15"],["t7","t15"],["t7","t15"],
+  ["t8","t15"],["t8","t15"],["t9","t15"],["t10","t15"],["t10","t15"],
+  ["t16"],["t16"],["t16"],["t16"],["t16"],["t15"],
+  ["t2"],["t12"],["t15"],["t5"],["t5"],["t4"],["t1"],["t1"],["t1"],["t1"],["t2"],
+  ["t6","t15"],["t14"],["t6"],["t17","t12"],
+  ["t4"],
+  ["t16"]
+];
+DATA.forEach((d,i)=>{ d.th = THEME_BY_INDEX[i] || []; });
+
+/* ================= STATE ================= */
+const state = {tab:"todos", q:"", std:"", type:"", cat:"", sort:{key:"",dir:1}, openTheme:null};
+
+/* ================= COVERAGE STRIP ================= */
+const counts = {}; STD_ORDER.forEach(s=>counts[s]=0);
+DATA.forEach(d=>counts[d.std]++);
+const total = DATA.length;
+document.getElementById("covTotal").textContent = total+" datapoints";
+document.getElementById("tabTodosN").textContent = total;
+document.getElementById("tabConvN").textContent = THEMES.length+" temas";
+document.getElementById("nThemes").textContent = THEMES.length;
+
+const covBar=document.getElementById("covBar"), covLegend=document.getElementById("covLegend");
+STD_ORDER.forEach(s=>{
+  const seg=document.createElement("div");
+  seg.className="cov-seg"; seg.dataset.std=s; seg.style.background=STD_COLOR[s];
+  seg.style.flexGrow=counts[s]; seg.title=s+" · "+counts[s]+" datapoints";
+  seg.innerHTML=`<span class="seg-n">${counts[s]}</span>`;
+  seg.onclick=()=>{ setTab("todos"); state.std=(state.std===s?"":s); document.getElementById("fStd").value=state.std; render(); };
+  covBar.appendChild(seg);
+  const lg=document.createElement("button");
+  lg.dataset.std=s;
+  lg.innerHTML=`<span class="swatch" style="background:${STD_COLOR[s]}"></span>${s} <span class="lg-n">${counts[s]}</span>`;
+  lg.onclick=()=>{ setTab("todos"); state.std=(state.std===s?"":s); document.getElementById("fStd").value=state.std; render(); };
+  covLegend.appendChild(lg);
+});
+
+/* ================= SELECTS ================= */
+function fillSelect(id,label,values){
+  document.getElementById(id).innerHTML=`<option value="">${label}</option>`+values.map(v=>`<option value="${v}">${v}</option>`).join("");
+}
+fillSelect("fStd","Todos los estándares",STD_ORDER);
+fillSelect("fType","Todos los tipos de dato",[...new Set(DATA.map(d=>d.type))].sort());
+document.getElementById("fCat").innerHTML=`<option value="">Todas las categorías</option>`+
+  [...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${CAT_LABEL[c]||c}</option>`).join("");
+
+/* ================= TABLE HEAD ================= */
+const COLS=[
+  {key:"std",label:"Estándar"},{key:"sec",label:"Sección / pilar"},{key:"code",label:"Código"},
+  {key:"req",label:"Requisito de reporting y definición"},{key:"type",label:"Tipo de dato"},
+  {key:"oblig",label:"Obligatoriedad"},{key:"cat",label:"Categoría"}
+];
+const head=document.getElementById("head");
+COLS.forEach(c=>{
+  const th=document.createElement("th"); th.dataset.key=c.key;
+  th.innerHTML=c.label+` <span class="arrow">▲▼</span>`;
+  th.onclick=()=>{ if(state.sort.key===c.key)state.sort.dir*=-1; else{state.sort.key=c.key;state.sort.dir=1;} render(); };
+  head.appendChild(th);
+});
+
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+/* ================= TABLE RENDER ================= */
+function matches(d){
+  if(state.std&&d.std!==state.std)return false;
+  if(state.type&&d.type!==state.type)return false;
+  if(state.cat&&d.cat!==state.cat)return false;
+  if(state.q){
+    const hay=(d.std+" "+d.sec+" "+d.code+" "+d.req+" "+d.def+" "+d.type+" "+d.oblig+" "+d.missing).toLowerCase();
+    if(!hay.includes(state.q.toLowerCase()))return false;
+  }
+  return true;
+}
+function render(){
+  document.querySelectorAll(".cov-seg").forEach(el=>el.classList.toggle("dim",state.std&&el.dataset.std!==state.std));
+  document.querySelectorAll(".cov-legend button").forEach(el=>el.classList.toggle("off",state.std&&el.dataset.std!==state.std));
+  document.querySelectorAll("#head th").forEach(th=>{
+    th.classList.toggle("sorted",th.dataset.key===state.sort.key);
+    th.querySelector(".arrow").textContent=th.dataset.key===state.sort.key?(state.sort.dir>0?"▲":"▼"):"▲▼";
+  });
+  let rows=DATA.filter(matches);
+  if(state.sort.key){
+    const k=state.sort.key;
+    if(k==="std")rows.sort((a,b)=>(STD_ORDER.indexOf(a.std)-STD_ORDER.indexOf(b.std))*state.sort.dir);
+    else rows.sort((a,b)=>String(a[k]).localeCompare(String(b[k]),"es")*state.sort.dir);
+  }
+  const body=document.getElementById("body"); body.innerHTML="";
+  rows.forEach(d=>{
+    const tr=document.createElement("tr");
+    const defHtml=d.def?`<div class="def">${esc(d.def)}</div>`:"";
+    const missHtml=d.missing?`<span class="miss"><b>Información ausente / nota:</b> ${esc(d.missing)}</span>`:"";
+    tr.innerHTML=`
+      <td><span class="badge" style="background:${STD_COLOR[d.std]}"><span class="dot"></span>${esc(d.std)}</span></td>
+      <td>${esc(d.sec)}</td>
+      <td><span class="code">${esc(d.code)}</span></td>
+      <td><div class="req">${esc(d.req)}</div>${defHtml}${missHtml}</td>
+      <td><span class="type-tag">${esc(d.type)}</span></td>
+      <td><span class="oblig">${esc(d.oblig)}</span></td>
+      <td><span class="oblig">${esc(CAT_LABEL[d.cat]||d.cat)}</span></td>`;
+    body.appendChild(tr);
+  });
+  document.getElementById("empty").style.display=rows.length?"none":"block";
+  document.getElementById("count").innerHTML=`Mostrando <b>${rows.length}</b> de <b>${total}</b> datapoints`+
+    ((state.std||state.type||state.cat||state.q)?` · filtro activo`:``);
+  window._rows=rows;
+}
+
+/* ================= CONVERGENCE ================= */
+function degColor(deg){ // 2..7 → verde progresivamente más intenso
+  const map={1:"#CDE3D6",2:"#A9D2B9",3:"#7FBD97",4:"#57A579",5:"#3E7A5E",6:"#2C5B45",7:"#21453A"};
+  return map[deg]||"#A9D2B9";
+}
+// build degree scale legend
+(function(){const sc=document.getElementById("degScale");[2,3,4,5,6,7].forEach(d=>{const b=document.createElement("span");b.style.flex="1";b.style.background=degColor(d);sc.appendChild(b);});})();
+
+// theme -> {std -> [datapoints]}
+const themeIndex={};
+THEMES.forEach(t=>themeIndex[t.id]={});
+DATA.forEach(d=>{
+  (d.th||[]).forEach(tid=>{
+    if(!themeIndex[tid]) themeIndex[tid]={};
+    (themeIndex[tid][d.std]=themeIndex[tid][d.std]||[]).push(d);
+  });
+});
+// compute degree and sort themes desc by degree then original order
+const themeMeta=THEMES.map((t,i)=>{
+  const byStd=themeIndex[t.id]||{};
+  const stds=STD_ORDER.filter(s=>byStd[s]&&byStd[s].length);
+  const nDp=stds.reduce((a,s)=>a+byStd[s].length,0);
+  return {...t, order:i, byStd, stds, deg:stds.length, nDp};
+}).sort((a,b)=> b.deg-a.deg || b.nDp-a.nDp || a.order-b.order);
+
+/* matrix head */
+(function(){
+  const mh=document.getElementById("mhead");
+  mh.innerHTML=`<th class="th-theme">Tema de convergencia</th><th class="th-deg">Grado</th>`+
+    STD_ORDER.map(s=>`<th>${STD_SHORT[s]}</th>`).join("");
+})();
+
+function renderConv(){
+  const mb=document.getElementById("mbody"); mb.innerHTML="";
+  themeMeta.forEach(t=>{
+    const tr=document.createElement("tr");
+    tr.className="mrow"+(state.openTheme===t.id?" open":"");
+    tr.dataset.theme=t.id;
+    let cells="";
+    STD_ORDER.forEach(s=>{
+      const n=(t.byStd[s]||[]).length;
+      cells+=`<td class="cell">`+(n?`<span class="num" style="background:${STD_COLOR[s]}">${n}</span>`:`<span class="none">·</span>`)+`</td>`;
+    });
+    tr.innerHTML=`
+      <td class="th-cell"><div class="th-name"><span class="chev">▸</span>${esc(t.name)}</div><div class="th-desc">${esc(t.desc)}</div></td>
+      <td class="deg-cell"><span class="deg-badge" style="background:${degColor(t.deg)}">${t.deg}/7</span></td>
+      ${cells}`;
+    tr.onclick=()=>{ state.openTheme=(state.openTheme===t.id?null:t.id); renderConv(); };
+    mb.appendChild(tr);
+
+    if(state.openTheme===t.id){
+      const dr=document.createElement("tr"); dr.className="detailrow";
+      let groups="";
+      t.stds.forEach(s=>{
+        const chips=t.byStd[s].map(d=>
+          `<button class="dchip" data-code="${esc(d.code)}"><span class="cdot" style="background:${STD_COLOR[s]}"></span>${esc(d.code)}</button>`
+        ).join("");
+        groups+=`<div class="dgroup"><div class="glabel"><span class="swatch" style="background:${STD_COLOR[s]}"></span>${STD_SHORT[s]}</div><div class="dchips">${chips}</div></div>`;
+      });
+      dr.innerHTML=`<td colspan="9"><div class="detail-inner">${groups}</div></td>`;
+      mb.appendChild(dr);
+      dr.querySelectorAll(".dchip").forEach(btn=>{
+        btn.onclick=(e)=>{ e.stopPropagation(); goToDatapoint(btn.dataset.code); };
+      });
+    }
+  });
+}
+function goToDatapoint(code){
+  setTab("todos");
+  state.std="";state.type="";state.cat="";state.sort={key:"",dir:1};
+  document.getElementById("fStd").value="";document.getElementById("fType").value="";document.getElementById("fCat").value="";
+  state.q=code; document.getElementById("q").value=code;
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ================= TABS ================= */
+function setTab(name){
+  state.tab=name;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+  document.getElementById("view-todos").hidden = (name!=="todos");
+  document.getElementById("view-conv").hidden = (name!=="conv");
+  if(name==="conv") renderConv();
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+/* ================= EVENTS ================= */
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
+document.getElementById("fStd").addEventListener("change",e=>{state.std=e.target.value;render();});
+document.getElementById("fType").addEventListener("change",e=>{state.type=e.target.value;render();});
+document.getElementById("fCat").addEventListener("change",e=>{state.cat=e.target.value;render();});
+document.getElementById("reset").addEventListener("click",()=>{
+  state.q="";state.std="";state.type="";state.cat="";state.sort={key:"",dir:1};
+  document.getElementById("q").value="";document.getElementById("fStd").value="";
+  document.getElementById("fType").value="";document.getElementById("fCat").value="";
+  render();
+});
+document.getElementById("csv").addEventListener("click",()=>{
+  const rows=window._rows||DATA;
+  const H=["Estándar","Sección/pilar","Código","Requisito de reporting","Definición","Tipo de dato","Obligatoriedad","Categoría","Información ausente/nota","Temas de convergencia"];
+  const q=s=>`"${String(s||"").replace(/"/g,'""')}"`;
+  const themeName=id=>(THEMES.find(t=>t.id===id)||{}).name||id;
+  const lines=[H.map(q).join(",")].concat(rows.map(d=>
+    [d.std,d.sec,d.code,d.req,d.def,d.type,d.oblig,CAT_LABEL[d.cat]||d.cat,d.missing,(d.th||[]).map(themeName).join("; ")].map(q).join(",")
+  ));
+  const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="datapoints_biodiversidad_7_estandares.csv";a.click();
+});
+
+render();
+</script>
+</body>
+</html>
