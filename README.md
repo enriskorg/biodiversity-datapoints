@@ -29,4 +29,5 @@ Los requisitos se presentan de forma parafraseada y resumida. No constituyen una
 
 ## Autor
 
-[Tu nombre]
+Enrique Mesa 
+enrisk.org
